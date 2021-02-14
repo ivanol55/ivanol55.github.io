@@ -62,6 +62,6 @@ Now the blog is live! And after that initial rocky setup, the results are in:
 5. How to setup Github Pages
 6. A blog where I can write posts. Like this post! Hello!
 
-So, it was an interesting weekend project that has opened quite the new road to me about content creation. Maybe even go back to [Twitch live development]() at some point?
+So, it was an interesting weekend project that has opened quite the new road to me about content creation. Maybe even go back to [Twitch live development](https://www.twitch.tv/ivanol55) at some point?
 
 To many new blog posts to come!

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Headbang development I: What’s this Jekyll thing? | Devlogs from a non-developer</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Headbang development I: What’s this Jekyll thing?" />
+<meta name="author" content="Ivan Mendez" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Let’s start a blog, they said, “It’s quite simple” they said…" />
+<meta property="og:description" content="Let’s start a blog, they said, “It’s quite simple” they said…" />
+<link rel="canonical" href="http://localhost:4000/blog/headbang%20development/headbang-development-I/" />
+<meta property="og:url" content="http://localhost:4000/blog/headbang%20development/headbang-development-I/" />
+<meta property="og:site_name" content="Devlogs from a non-developer" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-02-14T10:00:00+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Headbang development I: What’s this Jekyll thing?" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","url":"http://localhost:4000/blog/headbang%20development/headbang-development-I/","headline":"Headbang development I: What’s this Jekyll thing?","dateModified":"2021-02-14T10:00:00+01:00","datePublished":"2021-02-14T10:00:00+01:00","description":"Let’s start a blog, they said, “It’s quite simple” they said…","author":{"@type":"Person","name":"Ivan Mendez"},"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/blog/headbang%20development/headbang-development-I/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Devlogs from a non-developer" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Devlogs from a non-developer</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/posts/">Archive</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Headbang development I: What&#39;s this Jekyll thing?</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2021-02-14T10:00:00+01:00" itemprop="datePublished">Feb 14, 2021
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Blogging is a good way to practice your technical writing soft-skills. You get to learn the really important ability of writing understandable content for a broad audiences, with the perk of building up portfolio. Win-win, right? well, that is, if you can find a topic. Development diaries? client work stories? software reviews? Choice paralysis is a thing, and picking a consistent theme and structure is complicated.</p>
+
+<p>Then I started to build this blog while I thought about dev diaries in a completely new platform to me, and suddenly saw my first post series in front of me, in the form of cryptic error codes and stacked browser tabs: self-learning stories.</p>
+
+<p>Self-learning sounds fun at first when you look at it. That’s something that recruiters like, right? independence, knowing how to set yourself up in new environments without much one-on-one help, something-something pull your own bootstraps. It <em>is</em> a really useful skill to pick up, especially as a junior, but it can sometimes be an… interesting process.</p>
+
+<p>I like to compare this way of learning to <a href="https://www.answerinprogress.com/">Answer in Progress</a>’s way of investigating a topic: search what you want to do on Google (Bonus points for using DuckDuckGo) and see where the algorithm takes you. Documentation, courses, “getting started” tutorials, github repos… I usually spend the first 15 to 30 minutes just reading up and making notes. That’s how I started this, really! I just googled “build a site with Jekyll” and went knee deep into tabs.</p>
+
+<p>Then problems started to appear. The first problem was what I like to call “store fatigue”. Everyone has their own package management system. I just <code class="highlighter-rouge">apt install</code>ed jekyll, why is it not launching? what do you mean unset variables? well, when this happens, we go back to our <em>headbang development</em> model. Google the error code and start opening tabs!</p>
+
+<p>What do I find with this? thanks to the best place in the internet StackOverflow, I find out that apt does not set up jekyll correctly, and that I need to use something called <em>gems</em> from the ruby repos. I didn’t know what Ruby was until this morning, so I already got something out of the project. (Partial) success! and even better, using the ruby install process just fixed my issue, so the terminal tells me I have a working Jekyll site!</p>
+
+<p>I open the URL that the program spit out, and I open it on Firefox. What I find in front of my eyes is some form of practical joke.</p>
+
+<p>Who designed these Jekyll size standards? 60% of the page is literally empty! Well, with this, I remember having seen the words “Jekyll themes” on the google search suggestions when starting my investigations. May the gods bless the almighty algorithm. So, I start looking at these themes on whatever recommended pages there is, like the default Github Pages repos, or third party aggregators.</p>
+
+<p>Is it some kind design convention? Like an inside joke, written in stone, that a Jekyll theme must waste at least 50% of screen real-estate on empty white space? who designed these, Twitter? Does Jekyll not work in any computers connected to a screen that is not a 4:3 CRT TV from 2002 or a phone? THis needs fixing!</p>
+
+<p>But when I start looking at the folders that Jekyll helpfully generated, it seems there is no css source anywhere to edit. There <em>is</em> a css file on the generated site under <code class="highlighter-rouge">_site</code>, but it source of configuration seems, at first sight, to be fed entirely with magic and unicorns, invisible to the human eye to access. DuckDuckGo it is then.</p>
+
+<p>Turns out, Jekyll <em>used to</em> have the theme files on your site folder, but that is (truthfully, I’ll give them that) hard to mantain and update. So their solution was to put them out as easily installable and upgradable packages (yay!) on the Ruby repositories (ugh, <em>store fatigue</em>). Apparently, the gem setup already pulled in the default theme as a gem, and the files are somewhere else. A couple tab openings later, I found a bash command incantation that tells me that the theme files are located on <code class="highlighter-rouge">/var/lib/gems/2.5.0/gems/minima-2.5.1/</code>, so I go take a look and see how they work.</p>
+
+<p>I find out that you can override these by creating the folders yourself in the Jekyll file folder, so I copy the defaults and start implementing some <em>actually sane</em> design configurations. I set the theme content to be 80% of the window’s width, easy enough, then I try to create more posts to check out the layout.</p>
+
+<p>That move was about to open me up about 6 hours of work.</p>
+
+<p>Someone apparently decided that, as the content has to be 33% of the screen width, the <em>only</em> logical answer is of course set them to be one big unclassified column. Because of course that is the most logical design decision for a modern website. So, change time it is! I decide the best choice for space optimization is a resizing flexbox that shows the posts. Not all of them, more on that later. So, I <code class="highlighter-rouge">vim home.html</code> the template on the <code class="highlighter-rouge">_templates</code> folder and see the problem. It is, apparently, a list, so I need to change this to a css flexbox grid.</p>
+
+<p>Problem is, I have only headbang learned php in terms of WebDev, which is very much not a client-side static language. So, after opening a bunch of new sites to figure out what even <code class="highlighter-rouge">Liquid Markup</code> is, I find out it is apparently decently easy to figure out, at least with the theme’s premade varable structure. The naming structure was good, fortunately (at least something had a good design team on it!) so I configure it to limit it to the last 5 posts, and make it display as a flexbox after some tinkering. Well, a lot of tinkering. I’m not precisely a CSS Wizard.</p>
+
+<p>So I reload the <code class="highlighter-rouge">jekyll serve</code> command, and it’s finally working! Now I can investigate how creating a blogpost works. You know, for the <em>blog</em> part of this blog project that started 6 hours ago? Well, this is when the easy part comes in: the blogposts are auto-detected on the <code class="highlighter-rouge">_posts</code> folder as long as you name them on the correct way (good thing the docs exist so I see what that is), and it auto-picks the name, post excerpt, SEO tags and permalink from the file header. Wordpress could learn a thing or two about post simplicity from Jekyll at the end of the day.</p>
+
+<p>Speaking about post simplicity: post tagging. This is great! no database queries, no storage, no consiscency errors… You just write the tag and it parses it for you! So, as I want to write post <em>series</em>, each series being a category (more on those series coming soon!), I need to make a template for the markdown file to show the categorized post. The best option, according to StackOverflow, is a “Liquid Markup for loop that iterates over every category, with a nested for loop listing the category posts”.</p>
+
+<p>As easy as that turned out to be, this industry has a word simplicity problem.</p>
+
+<p>So, after checking that works, it all seems to work fine. So, all the confusing stuff done, now I gotta put it up on a Github Pages site. Easy enough, right? I mean, I’ve pushed stuff to repos before! I have already released <a href="https://github.com/ivanol55?tab=repositories">open source projects</a> before! This is gonna be real easy! Well, turns out, Github Pages is not Github straightforward.</p>
+
+<p>I push the contents to the site and open <code class="highlighter-rouge">ivanol55.github.io</code>, the expected url. <em>Nada</em>. Empty. Well, my disappointment is immesurable, my day is ruined, and my DuckDuckGo tab is revving its search <em>engine</em>. I find out a couple of errors I didn’t assume there:</p>
+
+<ol>
+  <li>I need to push the <code class="highlighter-rouge">_site</code> folder, not the whole thing</li>
+  <li>I need to tell Github what branch it needs to read as the root of the <code class="highlighter-rouge">_site</code> folder</li>
+</ol>
+
+<p>So, I figure out how to make a new branch, setup the .git folder to push the <code class="highlighter-rouge">_site</code> contents to said branch by default, and make a test push. I find the tab that I left with the github page, press Fn + 5 (60% keyboard gang) to reload the previous 404 and… there’s a site! Jekyll did it, it’s <em>aliiiive!</em>… wait, wrong book reference?</p>
+
+<p>Now the blog is live! And after that initial rocky setup, the results are in:</p>
+
+<ol>
+  <li>I learned that ruby exists</li>
+  <li>I learned what static site generators are, and that there’s more of them</li>
+  <li>Some more CSS tinkering</li>
+  <li>Some basics on Liquid Markup logic and function</li>
+  <li>How to setup Github Pages</li>
+  <li>A blog where I can write posts. Like this post! Hello!</li>
+</ol>
+
+<p>So, it was an interesting weekend project that has opened quite the new road to me about content creation. Maybe even go back to <a href="https://www.twitch.tv/ivanol55">Twitch live development</a> at some point?</p>
+
+<p>To many new blog posts to come!</p>
+
+  </div><a class="u-url" href="/blog/headbang%20development/headbang-development-I/" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Devlogs from a non-developer</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ivan Mendez</li><li><a class="u-email" href="mailto:ivanm106@gmail.com">ivanm106@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ivanol55"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ivanol55</span></a></li><li><a href="https://www.linkedin.com/in/ivanmendezrodriguez"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">ivanmendezrodriguez</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>ivanol55&#39;s technical writeup blog, where a non-developer will ramble about how they fight with self-learning something outside of their professional scope and will take you along for the ride!</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

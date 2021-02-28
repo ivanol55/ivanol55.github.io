@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Dev Diaries - PCAPAnalyzer I: File rotation is kind of ugly | Devlogs from a non-developer</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Dev Diaries - PCAPAnalyzer I: File rotation is kind of ugly" />
+<meta name="author" content="Ivan Mendez" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Who needs rotating files anyways?" />
+<meta property="og:description" content="Who needs rotating files anyways?" />
+<link rel="canonical" href="http://localhost:4000/blog/dev%20diaries/dev-diaries-pcapanalyzer-I/" />
+<meta property="og:url" content="http://localhost:4000/blog/dev%20diaries/dev-diaries-pcapanalyzer-I/" />
+<meta property="og:site_name" content="Devlogs from a non-developer" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-02-28T10:00:00+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Dev Diaries - PCAPAnalyzer I: File rotation is kind of ugly" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","url":"http://localhost:4000/blog/dev%20diaries/dev-diaries-pcapanalyzer-I/","headline":"Dev Diaries - PCAPAnalyzer I: File rotation is kind of ugly","dateModified":"2021-02-28T10:00:00+01:00","datePublished":"2021-02-28T10:00:00+01:00","description":"Who needs rotating files anyways?","author":{"@type":"Person","name":"Ivan Mendez"},"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/blog/dev%20diaries/dev-diaries-pcapanalyzer-I/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Devlogs from a non-developer" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Devlogs from a non-developer</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/posts/">Archive</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Dev Diaries - PCAPAnalyzer I: File rotation is kind of ugly</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2021-02-28T10:00:00+01:00" itemprop="datePublished">Feb 28, 2021
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Have you ever used Wireshark?</p>
+
+<p>It’s an <em>amazing</em> network debugging and investigation tool. Anyone remotely related to connected comùters will regularly use it. Networking, security analysts, network application development, penetration testing… either directly by just using the graphical software, the CLI tool <code class="highlighter-rouge">tshark</code>, or a variation of that for a quick lightweight debugging, like <code class="highlighter-rouge">tcpdump</code>. It will start sniffing in whatever network interface you tell the program to listen on, and log every single packet it sees into a file for storage, or even into standard input for you to just see in a quick check, for example to see if one of your programs is actually sending keepalive connections.</p>
+
+<p>But that’s where the problems start popping up on the “let’s store everything in one file” solution: scalability basically disappears from your scope, for concurrency and management issues we’ll get into later.</p>
+
+<p>Have you ever tried to open up wireshark in a windows machine? They have a <em>lot</em> of background traffic. Like, <strong><em>a lot</em></strong>. Phoning home for update checks, antivirus definition changes, hell, even the windows calculator needs to phone home for currency conversion capabilities. The future is now, and it’s connected. Just network noise galore.</p>
+
+<p>Although the truth isyou don’t even need Windows for that to be a problem to be a thing. Linux doesn’t have that noise problem, but if you have a lot of linux boxes, the problem pops up again. So, when you’re on the security field, like SOC analysis, you get quite a big amount of traffic to process. Thing is, then you imagine what most offices are, which is bbasically a big bunch of <em>windows</em> machines, and you quickly notice you’re gonna run into some big data-related problems.</p>
+
+<p>Now, there’s a problem with file storage even when you’re only handling a single data node, and it’s that the format can be inefficient. It’s convenient, but you can’t do a lot with it before you get out of control. Try to open a 1 Gigabyte <code class="highlighter-rouge">.pcap</code> file and see what it takes to open it and filter content. That’s a gigabyte. A twenty minute 1080p youtube video is a gigabyte of traffic. This can be generated by one client, in twenty minutes, without them doing anything else, which is unlikely. Email sending, open browser tabs with open connections, background programs polling for updates… multitasking in computers, and multitasking in your coworkers! concurrency for the concurrency gods!</p>
+
+<p>So we have a size problem. How was this solved originally? with a little something called <em>file rotation</em>. This is a program implementation that allows programs to, once the files reach a certain size, consider it finished and rotate into a new one, like moving from <code class="highlighter-rouge">netlog.pcap.000001</code> to <code class="highlighter-rouge">log.pcap.000002</code>. Even then, if it’s a constant system, you can circle back and overwrite the first one. So this would never run you out of space! Cool solution! problem solved, right?</p>
+
+<p>Well, if this was a done and solved problem for my use case, I would not be here writing a blog post series about it, wouln’t I?</p>
+
+<p>It <em>is</em> solved in terms of enterprise tool availability for production usage, but there’s no fun on just installing an already readily available tool for this that handles it, learning happens when you break and fix stuff! and what better to fix roadblocks on, that your own new from-scratch tool?</p>
+
+<p>My problem here is that I like centralization of content. So I don’t like having many files around and worrying that they will one day be overwritten. But even for non-lazy people, this creates a data concurrency problem, since only one person could write a file at once, and that means you could only have one client at a time. Pretty useless data aggregation system, if you ask me.</p>
+
+<p>I obviously decided to overengineer an open source-licensed solution that only I would use, that is also probably worse than the actual solutions out there. Because if you know this blog, you know I’m about security and IT design, not application development. That said, I still like to learn new stuff and challenging myself, so project PCAPAnalyzer was born.</p>
+
+<p>Now, this happened around two and a half years ago now, and has been in development intermittently since, because self-learning roadblocks. I hadn’t gotten into desktop app development then and I haven’t yet (that may be a future series? stay tuned!) so I turned into the next best thing I knew: Web Applications. I knew HTML, I had heard about PHP, that’s how those work, right? Open up a browser, click the link bookmark and the entire tool is at your disposal! No dependency hell, no distributed app update management for potentially hundreds of machines, no client drift from a valid config… beautiful words for a mantainer that is really not a mantainer!</p>
+
+<p>First thing I needed was to set app requirements and priorities. You can’t build something if you don’t know <em>what</em> you want and need to build. I got to thinking about the frontend first. Now, I’m a simple man. I see a standard, I use a standard. Django? That looks like too much abstraction, and I already know some pyhthon3, so I want something tried and tested, and also new to me.</p>
+
+<p>On web, PHP seems to be my best bet, since it’s also a useful skill to pick up. No laravel or anything, I don’t want <em>any</em> unnecesary abstraction layers. You learn the basics first, then build up with simplifying tools. The rest was the standard: HTML, CSS3 (I <em>could</em> use Bootstrap, but I think I’m gonna leave learning responsive design for another time), apache2 webserver.</p>
+
+<p>Next comes the backend. This was, at the time, completely new territory to me, so I did some searching in good ol’ DuckDuckGo and looked at what could best suit my needs. I wanted to aggregate everything I gathered into one place and make it really fast in terms of data search at scale (I was going to quickly add up a <em>lot</em> of data, remember the youtube video example?), so that screamed Database to me.</p>
+
+<p>I had also done a bit of learning on class about the LAMP stack, so I was familiar with MySQL. Free, Open Source, enterprise-ready scalable software, there for me to use, it was the perfect match. Data capture source was wireshark on the terminal, that one’s easy! unfortunately, wireshark does not have a “put into database” terminal option, neither does MySQL have a “wireshark capture” data source. So I needed some data processing.</p>
+
+<p>This is the part of the backend that was going to be the most engaging: something I build basically <em>from scratch</em>. In class we processed data with python scripts, and it seemed very extensible and easy to implement. So I chose python as a tool for data processing and transformation, which then would go into a database. Processing strings and inserting into a database.</p>
+
+<p>Let’s list our finaly decided application requirements and the choices to actually meet them</p>
+
+<ul>
+  <li>frontend
+    <ol>
+      <li>We want this tool to be available inside of a website, solved with <code class="highlighter-rouge">apache2</code> for delivery because it’s the gold standard</li>
+      <li>The site should be dynamic and it needs to be capable of database management around our <code class="highlighter-rouge">MySQL</code> backend, solved using <code class="highlighter-rouge">php</code></li>
+      <li>Make it pretty: <code class="highlighter-rouge">css3</code> is tried and tested for something! the web standard is very much a good tool for us</li>
+    </ol>
+  </li>
+  <li>backend
+    <ol>
+      <li>Network interface(s) data capture with Wireshark, more precisely its terminal counterpart <code class="highlighter-rouge">tshark</code>, because, no-gui Debian server!</li>
+      <li>Store the data consistently for fast retrieval: <code class="highlighter-rouge">mysql</code> has been getting more efficient for the last twenty five years, good amount of work there</li>
+      <li>Data treatment: There’s a lot of binary formats around that are not compatible with each other. That’s why we created <code class="highlighter-rouge">csv</code>, the age of interoperability. Let’s create some of those with <code class="highlighter-rouge">python3</code>!</li>
+    </ol>
+  </li>
+</ul>
+
+<p>I had seen all this on separate class assignments, so it was a good cross-understanding test! project PCAPAnalyzer was feasible and it was just about time for some invesigation and building! an <em>actual</em> product on the horizon!</p>
+
+<p>But that’s a story for the next dev diary, where we’ll start giving an eye into how much I underestimanted the complexity of data processing as a non-developer. See you then!</p>
+
+  </div><a class="u-url" href="/blog/dev%20diaries/dev-diaries-pcapanalyzer-I/" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Devlogs from a non-developer</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ivan Mendez</li><li><a class="u-email" href="mailto:ivanm106@gmail.com">ivanm106@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ivanol55"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ivanol55</span></a></li><li><a href="https://www.linkedin.com/in/ivanmendezrodriguez"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">ivanmendezrodriguez</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>ivanol55&#39;s technical writeup blog, where a non-developer will ramble about how they fight with self-learning something outside of their professional scope and will take you along for the ride!</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

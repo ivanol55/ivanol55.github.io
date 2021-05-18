@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Dev Diaries - PCAPAnalyzer III: What do you mean CSS is turing-complete? | Devlogs from a non-developer</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Dev Diaries - PCAPAnalyzer III: What do you mean CSS is turing-complete?" />
+<meta name="author" content="Ivan Mendez" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="ugh, CSS" />
+<meta property="og:description" content="ugh, CSS" />
+<link rel="canonical" href="http://localhost:4000/blog/dev%20diaries/dev-diaries-pcapanalyzer-III/" />
+<meta property="og:url" content="http://localhost:4000/blog/dev%20diaries/dev-diaries-pcapanalyzer-III/" />
+<meta property="og:site_name" content="Devlogs from a non-developer" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-04-03T10:00:00+02:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Dev Diaries - PCAPAnalyzer III: What do you mean CSS is turing-complete?" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","url":"http://localhost:4000/blog/dev%20diaries/dev-diaries-pcapanalyzer-III/","headline":"Dev Diaries - PCAPAnalyzer III: What do you mean CSS is turing-complete?","dateModified":"2021-04-03T10:00:00+02:00","datePublished":"2021-04-03T10:00:00+02:00","description":"ugh, CSS","author":{"@type":"Person","name":"Ivan Mendez"},"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/blog/dev%20diaries/dev-diaries-pcapanalyzer-III/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Devlogs from a non-developer" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Devlogs from a non-developer</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/posts/">Archive</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Dev Diaries - PCAPAnalyzer III: What do you mean CSS is turing-complete?</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2021-04-03T10:00:00+02:00" itemprop="datePublished">Apr 3, 2021
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>I think that, if you take a look around this site, even though it’s built upon a Jekyll theme, you will notice a fact that is impossible to deny: apart from not being a programmer, I am <em>also</em> very much not a designer.</p>
+
+<p>I have had HTML (and some CSS) experiences in class. Granted, it was stay at home classes because there was a <em>pandemic</em> happening, so I didn’t get a lot of explaining done to me at the time. Then, to make it not boring, I had some self-taught PHP under my now less-fitting belt (again, pandemic. Did we all bake our own bread at the time?) and some PHP classes on an actual school this time, because the curve was flattened. Kinda.</p>
+
+<p>So what I learnt about all of the earlier steps of this process in terms of good practice in software development, and in general, is to plan before I do. So I decided I needed to plan the feature scheme for the frontend first, then implement it bit by bit later. It’s very much a lot easier to build something that is clearly outlined, that to jump in and just start writing PHP without proper forethought!</p>
+
+<p>So, I gave it a lot of thought, built it, and did it wrong. Learning!</p>
+
+<p>Let’s go through what my planning scheme was. So, first, let’s talk about the landing page. We enter the URL and we should land on a page that should act like a <em>dashboard</em> of sorts. I like what <a href="https://grafana.com/">Grafana</a> does, just simple numbers at a quick look, so I kind of mimicked that. I display, on a table, every database accessible and show the total number of stored packets, the data sources it has, the total number of external IPs, MAC addresses count, the multicast packets, and how many protocols were found on the capture. Just quick numbers in case something looks abnormal.</p>
+
+<p>Then we get to probably the hardest part of the project to engineer: packetStream. packetStream is what this project initially was thought for. Here, we display every single packet that has gone through the capture interface. Any data you captured, a query away. Now, because this is a lot of data, it is imperative that I built in a filtering system in place, which lets you filter by any combination of columns in the system, like finding all of the packets that are SSH auth attempts from a certain IP. Or finding everything a certain machine has done (with their MAC address). All behind a pretty interface, in 50-packet lists.</p>
+
+<p>Is this an overwhelming amount of data? It probably is. Going packet by packet is not efficient when searching for intrusion attempts in a large-scale network. That’s why I came up with dataGlance. dataGlance, as its name explains, is <em>data</em> at a <em>glance</em>. Yeah, don’t call me to name Amazon Web Services products, I’m incapable of coming up with something convoluted like <em>lightsail</em> or <em>kinesis</em>. Names are supposed to be helpful ever before they accomplish a PR task.</p>
+
+<p>So, here in this tab we get useful information that we may be interested on, pre-calculated for us. All of the found private and public IP addresses. Is there a DHCP lease that is not accounted for? Is someone connecting to somewhere in an IP block ythey shouldn’t be? It’s here. Any MAC address that is not from a known machine is running around? here’s a full list of the seen ones for you to cross-reference. What protocols have gone through a capture point? what ports are being used? All that info is here. just a click away for you to account for and investigate.</p>
+
+<p>Now it feels like this might need more. Yes, a quick glance at data has shown you some potential need for investigation, But then, simple filtering through dataGlance is not cutting it anymore. You need absolute control. That’s where queryRunner comes in.</p>
+
+<p>Again, the feature is named in the anti-Amazon Web Services naming scheme: it does exactly what it is named like. You write a SQL query on the text box, it runs against the database, and you get your data. In this case, you get your data as a CSV text file, because as we established in an earlier blog post, yay for standard formats, and you do whatever you want with it from then on, locally.</p>
+
+<p>All of these seem like good features to have on a piece of forensics networking software, but having it only capture traffic from some source is not that interesting for a lot of use cases. Maybe the big incident already happened and you need to run an analysis on already captured data?</p>
+
+<p>This is where dbCreator and databasePicker join the game.</p>
+
+<p>The first one is a simple form: you provide a name, you provide some <code class="highlighter-rouge">.pcap</code> files, click on the button, wait a bit and boom, you have a database to work as, like you did in your network capture environment, with almost the same features as we did for the packetStream backend. (dataSources aren’t identifiable from pcap files, at least as I understand it now, unfortunately).</p>
+
+<p>Then, changing to your new database is dead simple. Just click the menu button displaying your current database and you will be taken to databaseChanger, which lets you choose your newly created database and set it as active. From then on until your session ends or you switch it again, you’ll run all your data queries and page browsing checks against the database you selected. Then, when you’re done with it, you can just drop the database if you want to save space on your server.</p>
+
+<p>Then on the About page you manage access to the program. You can both create ysers in the user management console to access the web frontend, and you can create API keys for the API query system.</p>
+
+<p>Which takes me to the fact that there is an API query system! You have the option to retrieve data, like all of the available databases, the data from the frontpage, or the data from dataGlance, so you can integrate it in a custom client, like perhaps a desktop app or an external monitoring tool?</p>
+
+<p>Now you many notice that this was all too simple. Too few mistakes along the way, too few rewriting decisions in our process. And I thought so too. And then, the two afterthoughts came upon me, one from getting to know a new tool and one from procastination. The first one happened when I discovered that PostgreSQL existed thanks to my classes, and how the user control system was <em>way</em> nicer for my plans (and also, less related to Oracle), best defined python connector drivers for the backend… It was worth a move!</p>
+
+<p>Unfortunately, this automatically revealed to me that I had a roadblock based on procastination: my php code had exactly zero (0) functions in it. It was just a pack of scripts running some queries, because I did very much not expect the project to get this large.</p>
+
+<p>Let’s recap what we have gotten to do so far:</p>
+<ul>
+  <li>a front page that shows us numeric data for each of our databases</li>
+  <li>packetStream, a multi-source table system with filtering options for finding some specific types of communication on the logs</li>
+  <li>dataGlance, a page that shows you important info on simple tables, visible on just a fast look for sususpicious data</li>
+  <li>queryRunner, just run any SQL query you want against your database and get a handy <code class="highlighter-rouge">csv</code> file to put into any other system that will swallow it</li>
+  <li>dbCreator and databaseChanger, for after-the-fact large scale analysis tasks for any <code class="highlighter-rouge">.pcap</code> files that you may want to upload into the system and get the frontend treatment for their data</li>
+  <li>Identity and Access Management for the frontend system with user management and API key creation and dropping</li>
+  <li>An API system where you can query the available database list, and any dataGlance and frontpage data entries in handy universal <code class="highlighter-rouge">json</code> format</li>
+</ul>
+
+<p>So, the frontend worked! For like, a week. Then it was time to move to <code class="highlighter-rouge">postgresql</code>, and the entire project was halted because backend compatibility connectors were mad that that the <code class="highlighter-rouge">mysql</code> connector was not pointing to a <code class="highlighter-rouge">mysql</code> relational database management system anymore. So, in the next post, my naïve and dumb decisions mean I get to learn code refactoring <em>the hard way</em>!</p>
+
+<p>See you then!</p>
+
+  </div><a class="u-url" href="/blog/dev%20diaries/dev-diaries-pcapanalyzer-III/" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Devlogs from a non-developer</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ivan Mendez</li><li><a class="u-email" href="mailto:ivanm106@gmail.com">ivanm106@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ivanol55"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ivanol55</span></a></li><li><a href="https://www.linkedin.com/in/ivanmendezrodriguez"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">ivanmendezrodriguez</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>ivanol55&#39;s technical writeup blog, where a non-developer will ramble about how they fight with self-learning something outside of their professional scope and will take you along for the ride!</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

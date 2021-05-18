@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Dev Diaries - PCAPAnalyzer IV: Mistakes and manuals | Devlogs from a non-developer</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Dev Diaries - PCAPAnalyzer IV: Mistakes and manuals" />
+<meta name="author" content="Ivan Mendez" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Ah right, people might use this" />
+<meta property="og:description" content="Ah right, people might use this" />
+<link rel="canonical" href="http://localhost:4000/blog/dev%20diaries/dev-diaries-pcapanalyzer-IV/" />
+<meta property="og:url" content="http://localhost:4000/blog/dev%20diaries/dev-diaries-pcapanalyzer-IV/" />
+<meta property="og:site_name" content="Devlogs from a non-developer" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-05-18T10:00:00+02:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Dev Diaries - PCAPAnalyzer IV: Mistakes and manuals" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","url":"http://localhost:4000/blog/dev%20diaries/dev-diaries-pcapanalyzer-IV/","headline":"Dev Diaries - PCAPAnalyzer IV: Mistakes and manuals","dateModified":"2021-05-18T10:00:00+02:00","datePublished":"2021-05-18T10:00:00+02:00","description":"Ah right, people might use this","author":{"@type":"Person","name":"Ivan Mendez"},"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/blog/dev%20diaries/dev-diaries-pcapanalyzer-IV/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Devlogs from a non-developer" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Devlogs from a non-developer</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/posts/">Archive</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Dev Diaries - PCAPAnalyzer IV: Mistakes and manuals</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2021-05-18T10:00:00+02:00" itemprop="datePublished">May 18, 2021
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Let’s be honest with ourselves for a moment here: when I decided that I was going to develop a tool from scratch, it was bound to have some bad choices in it. That’s how learning works, right?</p>
+
+<p>So, both to avoid people from making these in the future and for your amusement and entertainment, let’s speak about those mistakes I made when developing this project.</p>
+
+<p>The first one stemmed from a lack of experience with the tools at my disposal, in this case, specifically about the relational database mananagement system I chose to implement into our application here. If you remember our post about builduing the backend, I chose to implement <code class="highlighter-rouge">MySQL</code> as the database management program for our data storage and querying. This turned out to be my first mistake.</p>
+
+<p>See, in the beginning, there was a general access with <code class="highlighter-rouge">admin</code> to all databases. Turns out, this is not a really good idea, so that needed to change for production-grade releases. This turned me to look into some IAM, or Identity and Access management, for our product. This, in turn, showed me a comparison between user management systems in different relational databases. Turns out, when compared with the rest of the options, <code class="highlighter-rouge">MySQL</code> is, let’s say, <em>less good</em>. It’s not <em>bad</em> per se, but having seen <code class="highlighter-rouge">PostgreSQL</code>’s user, role, permission and ownership management system makes the former one look half-baked at best.</p>
+
+<p>So, it came time to port the entire ecosystem to <code class="highlighter-rouge">PostgreSQL</code>. This got me mixed results. On the frontend side, it was mostly simple in the <code class="highlighter-rouge">php</code> and <code class="highlighter-rouge">sql</code> side, even though I needed to make some slight modifications, mostly for time calculation. On the backend side, however, it was a mixed bag. Choosing the new <code class="highlighter-rouge">python3</code> driver for database management system interaction was dead simple: the tried and true standard is just using <a href="https://www.psycopg.org/">psycopg2</a> and running with it, since it implements all of the <code class="highlighter-rouge">python</code> database interaction standards as the specification requires, so it’s better standardized.</p>
+
+<p>But in contrast, I found the problems when I tried to insert data into the database. It was kind of simple in the local server capture, since it was a <code class="highlighter-rouge">COPY FROM</code> command that grabs a <code class="highlighter-rouge">CSV</code> file that is read into the database. But then I discovered a problem: <code class="highlighter-rouge">COPY FROM</code> is a SQL command that reads server files. But it wasn’t reading CSV files from agents. After a couple of hours of scratching my head, I noticed the problem: It was looking for <em>local folders</em> that didn’t exist in the server. Because agents are <em>remote</em>.</p>
+
+<p>That said, <code class="highlighter-rouge">psycopg2</code> has its grounds covered for you in this, thanks to being a more standard and complete database driver than the <code class="highlighter-rouge">MySQL</code> counterparts. You can just use the <code class="highlighter-rouge">copy_expert()</code> function and use a <code class="highlighter-rouge">COPY FROM STDIN</code> query, that will just read the function parameter with the entire file. Presto, it works. It just inserts a really long string over the network. (bonus points since <code class="highlighter-rouge">postgreSQL</code> has ssl-enabled connections by default!)</p>
+
+<p>Good, now all of our system is running against <code class="highlighter-rouge">PostgreSQL</code>! Everyone can come in and check!</p>
+
+<p>Which brings us to our second problem on the line. <em>everyone</em> can come in and check. There’s no access control system. The frontend and API are a wild west free-for-all. That needs to change.</p>
+
+<p>Here I chose to learn something new to implement here. I’ve never done user storage and retrieval, and I wanted some testing done. So I investigated a bit. Seemed like I needed two things: API access control, and user login control. The API control was easy: just generate 32 character alphanumeric strings, and check that the strings exist in the newly created credentials database for every API request. Then, the user and password management system.</p>
+
+<p>This, as it turns out, was easier than I expected it to be. Inserting the user is just as easy as transforming the provided password into a <code class="highlighter-rouge">bcrypt blowfish</code> hash and inserting it into the database, then using another function built ito php to check if it is correct. No need for my own salting or anything. Then it was just a matter of checking if the user was logged in on every page, and done, the system now has Identity and Access Management. Just a page to create users, and some code to check the login status.</p>
+
+<p>Now, that last bit brings us to our next problem. I was just pasting the code into the <code class="highlighter-rouge">php</code> file headers, and remembered a line in the <code class="highlighter-rouge">to-do.txt</code> on my Documents folder</p>
+
+<ul>
+  <li>Refactor PCAPAnalyzer into using functions</li>
+</ul>
+
+<p>Yeah, I was just running <code class="highlighter-rouge">.php</code> scripts when coming into a folder. Not a single function on sight. Wanna change something in the menu? change it on the 9-12 files where it’s stored. This is something that needed a substantial logic rewrite. Thankfully all my code was mostly the same in every page check, so after a bit of investigation into how <code class="highlighter-rouge">include</code>s worked in <code class="highlighter-rouge">php</code> and some variable passing logic, the app was complete. One change in the function, and the menu was different in every single page. One line of security login checking, and the entire function check took care of the needed session checks. Structure!</p>
+
+<p>Now, writing this I noticed a problem. I had kind of forgotten how my old code worked. Well, okay, some parts I didn’t remember <em>at all</em>. Past Ivan decided that a couple thousand lines of code didn’t really need code comments or documentation, since I remembered it then, didn’t I?</p>
+
+<p>Well, since this was going to be a public project, I needed some actual documentation, both for code cleanup and clarity, and for usage documentation and feature discoverability. The first one was simple once I discovered how my old code actually worked, just write out the logic of the functions and HTML generation, and it was a much easier to understand project for anyone that came in without knowing the project.</p>
+
+<p>On the other hand, user/administration documentation was a different beast altogether. This is something that I had never done before, so it was a chance to get to know a new tool. I asked around for recommendations, and I got one that I liked a lot: on the <a href="https://selfhosted.show/">SelfHosted podcast</a> Discord server, <a href="https://github.com/realorangeone">RealOrangeOne</a> pointed me towards <code class="highlighter-rouge">MKDocs</code>. Turns out, I had seen <code class="highlighter-rouge">MKDocs</code> hundreds of times before, I just never knew. Everyone seems to be building their user docs on it, so it’s an active project that, upon inspection, basically told me “Jekyll for documentation”, so I was sold. Downloaded the packages into my machine, wrote the documentation structure, pushed into github, ran <code class="highlighter-rouge">mkdocs gh-deploy</code>, boom, <a href="https://ivanol55.github.io/pcapanalyzer-docs/">the docs were up</a>. No wonder this is the standard out there.</p>
+
+<p>The project worked. It was fully documented. It was usable by other people. We were ready for lauch, except for one last detail</p>
+
+<p>I don’t trust my code security. I haven’t ever done security-oriented programming, and I would be far more comfortable with the project with some pentesting done to it. So, thanks to this being a class project, I enlisted the help of <a href="https://github.com/hondas04">Sergi</a>. Sergi is a systems administrator and classmate of mine focusing in cybersecurity and penetration testing, so we decided that part of the project would be to pentest the program.</p>
+
+<p>Long story short is we did end up discovering a couple high-priority CVE’s on the program, basically some stored cross-site scripting and session stealing, which enabled an attacker to access the application. These vulnerabilities have since been fixed on the application thanks to the HTTPOnly flags set on a the <code class="highlighter-rouge">.htaccess</code> file.</p>
+
+<p>As always, let’s recap what we ended up changing and fixing</p>
+
+<ul>
+  <li>Rewrote the interaction with the database management system from <code class="highlighter-rouge">MySQL</code> to <code class="highlighter-rouge">PostgreSQL</code>
+    <ol>
+      <li>Changed the frontend to postgresql queries and php variables</li>
+      <li>Changed the backend to interact using the <code class="highlighter-rouge">psycopg2</code> interaction library</li>
+    </ol>
+  </li>
+  <li>Implemented identity and access management for the web frontend of the ecosystem</li>
+  <li>Implemented authentication for our API endpoint requests</li>
+  <li>Rewrote the frontend implementation to work using functions</li>
+  <li>Documented our newly refactored code</li>
+  <li>Documented the usage and management of our application ecosystem with MKDocs</li>
+  <li>Ran a penetration testing session with some friendly help</li>
+  <li>Fixed the vulnerabilities we found on the system</li>
+</ul>
+
+<p>So, with that, the project was finally complete! So this two and a half year development journey is complete, and you can now check out the <a href="https://ivanol55.github.io/pcapanayzer/">PCAPAnalyzer project</a> and the accompanying <a href="https://ivanol55.github.io/pcapanalyzer-docs/">Project documentation</a>! Now I just need to figure out what our next project is gonna be…</p>
+
+<p>We’ll see!</p>
+
+  </div><a class="u-url" href="/blog/dev%20diaries/dev-diaries-pcapanalyzer-IV/" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Devlogs from a non-developer</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ivan Mendez</li><li><a class="u-email" href="mailto:ivanm106@gmail.com">ivanm106@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ivanol55"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ivanol55</span></a></li><li><a href="https://www.linkedin.com/in/ivanmendezrodriguez"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">ivanmendezrodriguez</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>ivanol55&#39;s technical writeup blog, where a non-developer will ramble about how they fight with self-learning something outside of their professional scope and will take you along for the ride!</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

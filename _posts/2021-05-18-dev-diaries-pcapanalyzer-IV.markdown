@@ -61,6 +61,6 @@ As always, let's recap what we ended up changing and fixing
 - Ran a penetration testing session with some friendly help
 - Fixed the vulnerabilities we found on the system
 
-So, with that, the project was finally complete! So this two and a half year development journey is complete, and you can now check out the [PCAPAnalyzer project](https://ivanol55.github.io/pcapanayzer/) and the accompanying [Project documentation](https://ivanol55.github.io/pcapanalyzer-docs/)! Now I just need to figure out what our next project is gonna be...
+So, with that, the project was finally complete! So this two and a half year development journey is complete, and you can now check out the [PCAPAnalyzer project](https://ivanol55.github.io/pcapanalyzer/) and the accompanying [Project documentation](https://ivanol55.github.io/pcapanalyzer-docs/)! Now I just need to figure out what our next project is gonna be...
 
 We'll see!

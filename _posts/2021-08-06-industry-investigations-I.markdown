@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Industry investigations I: DevSecOps sounds convoluted."
-date: 2021-07-27 10:00:00 +0100
+title: "Industry investigations I: DevSecOps sounds convoluted"
+date: 2021-08-06 10:00:00 +0100
 category: industry investigations
 permalink: /blog/:categories/:title/
 description: The buzzwords are out of control!
